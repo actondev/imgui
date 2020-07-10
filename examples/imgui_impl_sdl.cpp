@@ -98,11 +98,20 @@ bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
         }
     case SDL_MOUSEBUTTONDOWN:
         {
-            if (event->button.button == SDL_BUTTON_LEFT) g_MousePressed[0] = true;
-            if (event->button.button == SDL_BUTTON_RIGHT) g_MousePressed[1] = true;
-            if (event->button.button == SDL_BUTTON_MIDDLE) g_MousePressed[2] = true;
+            if (event->button.button == SDL_BUTTON_LEFT) io.MouseDown[0] = true;
+            if (event->button.button == SDL_BUTTON_RIGHT) io.MouseDown[1] = true;
+            if (event->button.button == SDL_BUTTON_MIDDLE) io.MouseDown[2] = true;
+
             return true;
         }
+    case SDL_MOUSEBUTTONUP:
+    {
+        if (event->button.button == SDL_BUTTON_LEFT) io.MouseDown[0] = false;
+        if (event->button.button == SDL_BUTTON_RIGHT) io.MouseDown[1] = false;
+        if (event->button.button == SDL_BUTTON_MIDDLE) io.MouseDown[2] = false;
+
+        return true;
+    }
     case SDL_TEXTINPUT:
         {
             io.AddInputCharactersUTF8(event->text.text);
@@ -124,6 +133,11 @@ bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
 #endif
             return true;
         }
+    case SDL_MOUSEMOTION:
+    {
+        io.MousePos = ImVec2((float)event->motion.x, (float)event->motion.y);
+        return true;
+    }
     }
     return false;
 }
@@ -234,6 +248,7 @@ void ImGui_ImplSDL2_Shutdown()
     memset(g_MouseCursors, 0, sizeof(g_MouseCursors));
 }
 
+// TODO remove this ? (might be useful for some things)
 static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -362,7 +377,7 @@ void ImGui_ImplSDL2_NewFrame(SDL_Window* window)
     io.DeltaTime = g_Time > 0 ? (float)((double)(current_time - g_Time) / frequency) : (float)(1.0f / 60.0f);
     g_Time = current_time;
 
-    ImGui_ImplSDL2_UpdateMousePosAndButtons();
+//    ImGui_ImplSDL2_UpdateMousePosAndButtons();
     ImGui_ImplSDL2_UpdateMouseCursor();
 
     // Update game controllers (if enabled and available)
