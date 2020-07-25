@@ -53,7 +53,7 @@
 #endif
 
 // OpenGL Data
-static GLuint       g_FontTexture = 0;
+thread_local GLuint       g_FontTexture = 0;
 
 // Functions
 bool    ImGui_ImplOpenGL2_Init()

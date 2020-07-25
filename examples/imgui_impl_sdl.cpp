@@ -58,12 +58,12 @@
 #define SDL_HAS_VULKAN                      SDL_VERSION_ATLEAST(2,0,6)
 
 // Data
-static SDL_Window*  g_Window = NULL;
-static Uint64       g_Time = 0;
-static bool         g_MousePressed[3] = { false, false, false };
-static SDL_Cursor*  g_MouseCursors[ImGuiMouseCursor_COUNT] = {};
-static char*        g_ClipboardTextData = NULL;
-static bool         g_MouseCanUseGlobalState = true;
+static thread_local SDL_Window*  g_Window = NULL;
+static thread_local Uint64       g_Time = 0;
+static thread_local bool         g_MousePressed[3] = { false, false, false };
+static thread_local SDL_Cursor*  g_MouseCursors[ImGuiMouseCursor_COUNT] = {};
+static thread_local char*        g_ClipboardTextData = NULL;
+static thread_local bool         g_MouseCanUseGlobalState = true;
 
 static const char* ImGui_ImplSDL2_GetClipboardText(void*)
 {
