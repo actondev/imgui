@@ -8,13 +8,15 @@ include_dirs = include_directories('.', 'examples')
 
 sources = ['imgui_demo.cpp', 'imgui_draw.cpp', 'imgui_widgets.cpp', 'imgui.cpp']
 
-sources += 'examples/imgui_impl_sdl.cpp'
+if get_option('sdl').enabled()
+  sources += 'examples/imgui_impl_sdl.cpp'
+endif
 sources += 'examples/imgui_impl_opengl2.cpp'
 
 imgui = library('imgui',
     sources,
     dependencies: [
-        dependency('sdl', required: true),
+        dependency('sdl', required: get_option('sdl').enabled()),
     ],
     include_directories: include_dirs,
 )
