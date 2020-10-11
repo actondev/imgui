@@ -1,1 +1,4 @@
 option('sdl', type: 'feature', value: 'auto')
+option('IMGUI_TLS', type: 'feature', value: 'disabled',
+      description: 'TLS hack for thread local ImGui global instance. If enabled, need the following line in one of your source files:
+thread_local ImGuiContext* MyImGuiTLS;')

@@ -13,8 +13,14 @@ if get_option('sdl').enabled()
 endif
 sources += 'examples/imgui_impl_opengl2.cpp'
 
+cdata = configuration_data()
+cdata.set('IMGUI_TLS', get_option('IMGUI_TLS').enabled())
+imgui_config_h = configure_file(input : 'imconfig.h.meson',
+	       output : 'imconfig.h',
+	       configuration : cdata)
+
 imgui = library('imgui',
-    sources,
+    sources + [imgui_config_h],
     dependencies: [
         dependency('sdl', required: get_option('sdl').enabled()),
     ],
