@@ -1,5 +1,5 @@
 project('imgui', 'cpp',
-    version: '1.77',
+    version: '1.79',
     license: 'MIT',
 )
 
