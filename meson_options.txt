@@ -1,4 +1,10 @@
-option('sdl', type: 'feature', value: 'auto')
+option('sdl', type: 'feature', value: 'disabled')
+option('glfw', type: 'feature', value: 'disabled')
+option('allegro', type: 'feature', value: 'disabled')
+
 option('IMGUI_TLS', type: 'feature', value: 'disabled',
-      description: 'TLS hack for thread local ImGui global instance. If enabled, need the following line in one of your source files:
-thread_local ImGuiContext* MyImGuiTLS;')
+      description: '''TLS hack for thread local ImGui global instance. If enabled, need the following line in one of your source files:
+thread_local ImGuiContext* MyImGuiTLS;''')
+
+# unsigned short is the default but allegro shall use int
+# option('ImDrawIdx', type: 'combo', choices: ['int', 'unsigned short'], value: 'unsigned short')
