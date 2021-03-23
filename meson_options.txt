@@ -1,6 +1,8 @@
 option('sdl', type: 'feature', value: 'disabled')
 option('glfw', type: 'feature', value: 'disabled')
+option('example_glfw_opengl2', type: 'feature', value: 'disabled')
 option('allegro', type: 'feature', value: 'disabled')
+option('sfml', type: 'feature', value: 'disabled')
 
 option('IMGUI_TLS', type: 'feature', value: 'disabled',
       description: '''TLS hack for thread local ImGui global instance. If enabled, need the following line in one of your source files:

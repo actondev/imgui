@@ -7,6 +7,8 @@ project('imgui', 'cpp',
 include_dirs = include_directories('.', 'examples')
 
 sources = ['imgui_demo.cpp', 'imgui_draw.cpp', 'imgui_widgets.cpp', 'imgui.cpp']
+deps = []
+extra_includes = []
 
 if get_option('sdl').enabled()
   sources += 'examples/imgui_impl_sdl.cpp'
@@ -19,13 +21,19 @@ if get_option('glfw').enabled()
   sources += 'examples/imgui_impl_glfw.cpp'
 endif
 
+if get_option('example_glfw_opengl2').enabled()
+  sources += 'examples/example_glfw_opengl2/main.cpp'
+endif
+
+if get_option('sfml').enabled()
+  message('adding sfml support')
+  subdir('sfml')
+  deps += sfml_imgui_dep
+endif
+
 # that's the default value
 # but allegro needs int
 ImDrawIdx = 'unsigned short'
-
-deps = []
-extra_includes = []
-extra_includes2 = []
 
 if get_option('allegro').enabled()
   message('adding allegro support')
@@ -35,11 +43,10 @@ if get_option('allegro').enabled()
   allegro_proj = cmake.subproject('allegro')
   # WIP trying to get allegro to work.
   # could not find allegro_primitives.h, and saddly the
-  # allegro_proj.include_directories('allegro_primitives') did NOT do th etrick
+  # allegro_proj.include_directories('allegro_primitives') did NOT do the trick
 
   # Gotta clean this up
-  extra_includes2 += allegro_proj.include_directories('allegro')
-  # extra_includes2 += include_directories('../../allegro/addons/primitives')
+  extra_includes += allegro_proj.include_directories('allegro')
   deps += allegro_proj.dependency('allegro_primitives')
 endif
 
@@ -57,12 +64,13 @@ imgui = library('imgui',
     dependencies: [
       # the dependency here just addes the necessary include_directories
       dependency('sdl', required: get_option('sdl').enabled()),
+      dependency('glfw', required: get_option('glfw').enabled()),
+      dependency('sfml', required: get_option('sfml').enabled()),
       deps,
     ],
     include_directories: [
       include_dirs,
       extra_includes,
-      extra_includes2
       ]
 )
 
