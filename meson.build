@@ -33,7 +33,7 @@ endif
 
 if get_option('sfml').enabled()
   message('adding sfml support')
-  subdir('sfml')
+  subdir('imgui-sfml')
   deps += sfml_imgui_dep
 endif
 
@@ -71,7 +71,9 @@ imgui = library('imgui',
       # the dependency here just addes the necessary include_directories
       dependency('sdl', required: get_option('sdl').enabled()),
       dependency('glfw', required: get_option('glfw').enabled()),
-      dependency('sfml', required: get_option('sfml').enabled()),
+      # sfml
+      dependency('sfml-window', required: get_option('sfml').enabled()),
+      dependency('sfml-system', required: get_option('sfml').enabled()),
       deps,
     ],
     include_directories: [
