@@ -1,5 +1,5 @@
 project('imgui', 'cpp',
-    version: '1.79',
+    version: '1.85',
     license: 'MIT',
 )
 
@@ -17,18 +17,13 @@ deps = []
 extra_includes = []
 
 if get_option('sdl').enabled()
-  sources += 'examples/imgui_impl_sdl.cpp'
+  sources += 'backends/imgui_impl_sdl.cpp'
 endif
 
-message('gflw options is' + get_option('glfw').enabled().to_string())
+# message('gflw options is' + get_option('glfw').enabled().to_string())
 if get_option('glfw').enabled()
-  # hm I wonder where the glfw header comes from since this builds
   message('adding gflw support')
   sources += 'backends/imgui_impl_glfw.cpp'
-endif
-
-if get_option('example_glfw_opengl2').enabled()
-  sources += 'examples/example_glfw_opengl2/main.cpp'
 endif
 
 if get_option('sfml').enabled()
@@ -44,7 +39,7 @@ ImDrawIdx = 'unsigned short'
 if get_option('allegro').enabled()
   message('adding allegro support')
   ImDrawIdx = 'int'
-  sources += 'examples/imgui_impl_allegro5.cpp'
+  sources += 'backends/imgui_impl_allegro5.cpp'
   cmake = import('cmake')
   allegro_proj = cmake.subproject('allegro')
   # WIP trying to get allegro to work.
@@ -58,15 +53,19 @@ endif
 
 sources += 'backends/imgui_impl_opengl2.cpp'
 
+# TODO haven't found a way of forcing to use this generated header
+# instead of the imconfig.h file present in imgui repo
+# so, ended up renaming to imconfig.h.example
 cdata = configuration_data()
 cdata.set('IMGUI_TLS', get_option('IMGUI_TLS').enabled())
+cdata.set('IMGUI_DISABLE_OBSOLETE_FUNCTIONS', get_option('disable_obsolete_functions').enabled())
 cdata.set('ImDrawIdx', ImDrawIdx)
 imgui_config_h = configure_file(input : 'imconfig.h.meson',
 	       output : 'imconfig.h',
 	       configuration : cdata)
 
 imgui = library('imgui',
-    sources + [imgui_config_h],
+    sources,
     dependencies: [
       # the dependency here just addes the necessary include_directories
       dependency('sdl', required: get_option('sdl').enabled()),
@@ -82,4 +81,6 @@ imgui = library('imgui',
       ]
 )
 
-imgui_dep = declare_dependency(include_directories: include_dirs, link_with: imgui)
+imgui_dep = declare_dependency(
+  include_directories: include_dirs,
+  link_with: imgui)
