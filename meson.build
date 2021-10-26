@@ -16,17 +16,16 @@ sources = files(
 deps = []
 extra_includes = []
 
-if get_option('sdl').enabled()
+if get_option('sdl')
   sources += 'backends/imgui_impl_sdl.cpp'
 endif
 
-# message('gflw options is' + get_option('glfw').enabled().to_string())
-if get_option('glfw').enabled()
+if get_option('glfw')
   message('adding gflw support')
   sources += 'backends/imgui_impl_glfw.cpp'
 endif
 
-if get_option('sfml').enabled()
+if get_option('sfml')
   message('adding sfml support')
   subdir('imgui-sfml')
   deps += sfml_imgui_dep
@@ -36,7 +35,7 @@ endif
 # but allegro needs int
 ImDrawIdx = 'unsigned short'
 
-if get_option('allegro').enabled()
+if get_option('allegro')
   message('adding allegro support')
   ImDrawIdx = 'int'
   sources += 'backends/imgui_impl_allegro5.cpp'
@@ -57,8 +56,8 @@ sources += 'backends/imgui_impl_opengl2.cpp'
 # instead of the imconfig.h file present in imgui repo
 # so, ended up renaming to imconfig.h.example
 cdata = configuration_data()
-cdata.set('IMGUI_TLS', get_option('IMGUI_TLS').enabled())
-cdata.set('IMGUI_DISABLE_OBSOLETE_FUNCTIONS', get_option('disable_obsolete_functions').enabled())
+cdata.set('IMGUI_TLS', get_option('IMGUI_TLS'))
+cdata.set('IMGUI_DISABLE_OBSOLETE_FUNCTIONS', get_option('disable_obsolete_functions'))
 cdata.set('ImDrawIdx', ImDrawIdx)
 imgui_config_h = configure_file(input : 'imconfig.h.meson',
 	       output : 'imconfig.h',
@@ -68,11 +67,11 @@ imgui = library('imgui',
     sources,
     dependencies: [
       # the dependency here just addes the necessary include_directories
-      dependency('sdl', required: get_option('sdl').enabled()),
-      dependency('glfw', required: get_option('glfw').enabled()),
+      dependency('sdl', required: get_option('sdl')),
+      dependency('glfw', required: get_option('glfw')),
       # sfml
-      dependency('sfml-window', required: get_option('sfml').enabled()),
-      dependency('sfml-system', required: get_option('sfml').enabled()),
+      dependency('sfml-window', required: get_option('sfml')),
+      dependency('sfml-system', required: get_option('sfml')),
       deps,
     ],
     include_directories: [

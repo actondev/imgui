@@ -1,9 +1,9 @@
-option('sdl', type: 'feature', value: 'disabled')
-option('glfw', type: 'feature', value: 'disabled')
-option('allegro', type: 'feature', value: 'disabled')
-option('sfml', type: 'feature', value: 'disabled')
-option('disable_obsolete_functions', type: 'feature', value: 'enabled')
-option('IMGUI_TLS', type: 'feature', value: 'disabled',
+option('sdl', type: 'boolean', value: false)
+option('glfw', type: 'boolean', value: false)
+option('allegro', type: 'boolean', value: false)
+option('sfml', type: 'boolean', value: false)
+option('disable_obsolete_functions', type: 'boolean', value: true, description: 'disabling obsolete functions: compilation will fail if using obsolete functions')
+option('IMGUI_TLS', type: 'boolean', value: false,
       description: '''TLS hack for thread local ImGui global instance. If enabled, need the following line in one of your source files:
 thread_local ImGuiContext* MyImGuiTLS;''')
 
