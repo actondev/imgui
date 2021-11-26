@@ -4029,7 +4029,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
     const bool input_requested_by_tabbing = (item_status_flags & ImGuiItemStatusFlags_FocusedByTabbing) != 0;
     const bool input_requested_by_nav = (g.ActiveId != id) && ((g.NavActivateInputId == id) || (g.NavActivateId == id && g.NavInputSource == ImGuiInputSource_Keyboard));
 
-    const bool user_clicked = hovered && io.MouseClicked[0];
+    const bool user_clicked = hovered && (io.MouseClicked[0] || io.MouseClicked[1]);
     const bool user_scroll_finish = is_multiline && state != NULL && g.ActiveId == 0 && g.ActiveIdPreviousFrame == GetWindowScrollbarID(draw_window, ImGuiAxis_Y);
     const bool user_scroll_active = is_multiline && state != NULL && g.ActiveId == GetWindowScrollbarID(draw_window, ImGuiAxis_Y);
     bool clear_active_id = false;
@@ -4115,7 +4115,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
         ClearActiveID();
 
     // Release focus when we click outside
-    if (g.ActiveId == id && io.MouseClicked[0] && !init_state && !init_make_active) //-V560
+    if (g.ActiveId == id && (io.MouseClicked[0] || io.MouseClicked[1]) && !init_state && !init_make_active) //-V560
         clear_active_id = true;
 
     // Lock the decision of whether we are going to take the path displaying the cursor or selection
@@ -4170,7 +4170,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
 
         // Although we are active we don't prevent mouse from hovering other elements unless we are interacting right now with the widget.
         // Down the line we should have a cleaner library-wide concept of Selected vs Active.
-        g.ActiveIdAllowOverlap = !io.MouseDown[0];
+        g.ActiveIdAllowOverlap = !(io.MouseDown[0] || io.MouseDown[1]);
         g.WantTextInputNextFrame = 1;
 
         // Edit in progress
@@ -4226,6 +4226,20 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
                 stb_textedit_click(state, &state->Stb, mouse_x, mouse_y);
                 state->CursorAnimReset();
             }
+        }
+        // special check for right click
+        else if (io.MouseClicked[1] && hovered && !state->SelectedAllMouseLock)
+        {
+          int start_before = state->Stb.select_start;
+          int end_before = state->Stb.select_end;
+          stb_textedit_click(state, &state->Stb, mouse_x, mouse_y);
+          int cursor_after = state->Stb.cursor;
+          state->CursorAnimReset();
+          if(cursor_after >= start_before && cursor_after <= end_before) {
+            // restore selection
+            state->Stb.select_start = start_before;
+            state->Stb.select_end = end_before;
+          }
         }
         else if (io.MouseDown[0] && !state->SelectedAllMouseLock && (io.MouseDelta.x != 0.0f || io.MouseDelta.y != 0.0f))
         {
