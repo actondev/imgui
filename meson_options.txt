@@ -1,5 +1,6 @@
 option('sdl', type: 'boolean', value: false)
 option('glfw', type: 'boolean', value: false)
+option('opengl', type: 'integer', min: 2, max: 3, value: 2)
 option('allegro', type: 'boolean', value: false)
 option('sfml', type: 'boolean', value: false)
 option('disable_obsolete_functions', type: 'boolean', value: true, description: 'disabling obsolete functions: compilation will fail if using obsolete functions')

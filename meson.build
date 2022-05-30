@@ -50,7 +50,7 @@ if get_option('allegro')
   deps += allegro_proj.dependency('allegro_primitives')
 endif
 
-sources += 'backends/imgui_impl_opengl2.cpp'
+sources += get_option('opengl') == 2 ? 'backends/imgui_impl_opengl2.cpp' : 'backends/imgui_impl_opengl3.cpp'
 
 # TODO haven't found a way of forcing to use this generated header
 # instead of the imconfig.h file present in imgui repo
