@@ -22,6 +22,8 @@ Index of this file:
 
 */
 
+#include <cstdint>
+
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -2077,10 +2079,16 @@ void ImFontAtlas::PrepareFontTexture() {
 
             // Write each slice
             IM_ASSERT(pad_left + line_width + pad_right == r->Width && y < r->Height); // Make sure we're inside the texture bounds before we start writing pixels
-            unsigned char* write_ptr = &r->FontTexture->TexData[(r->X + ((r->Y + y) * r->FontTexture->TexWidth)) * 4]; //Each pixel is 4 bytes (RGBA)
-            memset(write_ptr, 0x00, pad_left*4);
-            memset(write_ptr + (pad_left * 4), 0xFF, line_width * 4);
-            memset(write_ptr + (pad_left + line_width) * 4, 0x00, pad_right * 4);
+            uint32_t *write_ptr = (uint32_t*)&r->FontTexture->TexData[(r->X + ((r->Y + y) * r->FontTexture->TexWidth)) * 4]; //Each pixel is 4 bytes (RGBA)
+
+            for (unsigned int i = 0; i < pad_left; i++)
+              *(write_ptr + i) = IM_COL32(255, 255, 255, 0);
+
+            for (unsigned int i = 0; i < line_width; i++)
+              *(write_ptr + pad_left + i) = IM_COL32_WHITE;
+
+            for (unsigned int i = 0; i < pad_right; i++)
+              *(write_ptr + pad_left + line_width + i) = IM_COL32(255, 255, 255, 0);
 
             // Calculate UVs for this line
             ImVec2 uv0 = ImVec2((float)(r->X + pad_left - 1), (float)(r->Y + y)) * this->TexUvScale;
