@@ -2453,6 +2453,16 @@ float FONT_ScaleForPixelHeight(const FontBackEnd *backend, float height) {
 #endif
 }
 
+float FONT_ScaleForEmHeight(const FontBackEnd *backend, float height) {
+    IM_ASSERT(backend);
+#ifdef IMGUI_ENABLE_FREETYPE
+    // TODO how is this?
+    return height / backend->Info.PixelHeight;
+#else
+    return stbtt_ScaleForMappingEmToPixels(backend->stbtt_backend, height);
+#endif
+}
+
 int FONT_FindGlyphIndex(const FontBackEnd *backend, int codepoint) {
     IM_ASSERT(backend); 
 #ifdef IMGUI_ENABLE_FREETYPE
@@ -2993,7 +3003,7 @@ const ImFontGlyph* ImFont::FindGlyph(ImWchar codepoint, float float_size)
     }
     else {
         // Create this glyph.
-        float scale = FONT_ScaleForPixelHeight(this->PrivData, short_size);
+        float scale = FONT_ScaleForEmHeight(this->PrivData, short_size);
         
         g = FONT_FindGlyphIndex(this->PrivData, codepoint);
         if (!g)
