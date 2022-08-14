@@ -175,6 +175,7 @@ typedef void (APIENTRYP PFNGLPOLYGONMODEPROC) (GLenum face, GLenum mode);
 typedef void (APIENTRYP PFNGLSCISSORPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
 typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC) (GLenum target, GLenum pname, GLint param);
 typedef void (APIENTRYP PFNGLTEXIMAGE2DPROC) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels);
+typedef void (APIENTRYP PFNGLTEXSUBIMAGE2DPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
 typedef void (APIENTRYP PFNGLCLEARPROC) (GLbitfield mask);
 typedef void (APIENTRYP PFNGLCLEARCOLORPROC) (GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 typedef void (APIENTRYP PFNGLDISABLEPROC) (GLenum cap);
@@ -454,7 +455,7 @@ GL3W_API GL3WglProc imgl3wGetProcAddress(const char *proc);
 
 /* gl3w internal state */
 union GL3WProcs {
-    GL3WglProc ptr[58];
+    GL3WglProc ptr[59];
     struct {
         PFNGLACTIVETEXTUREPROC            ActiveTexture;
         PFNGLATTACHSHADERPROC             AttachShader;
@@ -509,6 +510,7 @@ union GL3WProcs {
         PFNGLSHADERSOURCEPROC             ShaderSource;
         PFNGLTEXIMAGE2DPROC               TexImage2D;
         PFNGLTEXPARAMETERIPROC            TexParameteri;
+        PFNGLTEXSUBIMAGE2DPROC           TexSubImage2D;
         PFNGLUNIFORM1IPROC                Uniform1i;
         PFNGLUNIFORMMATRIX4FVPROC         UniformMatrix4fv;
         PFNGLUSEPROGRAMPROC               UseProgram;
@@ -573,6 +575,7 @@ GL3W_API extern union GL3WProcs imgl3wProcs;
 #define glShaderSource                    imgl3wProcs.gl.ShaderSource
 #define glTexImage2D                      imgl3wProcs.gl.TexImage2D
 #define glTexParameteri                   imgl3wProcs.gl.TexParameteri
+#define glTexSubImage2D                  imgl3wProcs.gl.TexSubImage2D
 #define glUniform1i                       imgl3wProcs.gl.Uniform1i
 #define glUniformMatrix4fv                imgl3wProcs.gl.UniformMatrix4fv
 #define glUseProgram                      imgl3wProcs.gl.UseProgram
@@ -764,6 +767,7 @@ static const char *proc_names[] = {
     "glShaderSource",
     "glTexImage2D",
     "glTexParameteri",
+    "glTexSubImage2D",
     "glUniform1i",
     "glUniformMatrix4fv",
     "glUseProgram",
