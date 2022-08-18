@@ -2472,7 +2472,7 @@ int FONT_FindGlyphIndex(const FontBackEnd *backend, int codepoint) {
 #endif
 }
 
-void FONT_GetGlyphHMetrics(FontBackEnd *backend, int glyph_index, float scale, int *advanceWidth, int *leftSideBearing) {
+void FONT_GetGlyphHMetrics(FontBackEnd *backend, int glyph_index, float scale, float *advanceWidth, int *leftSideBearing) {
     IM_ASSERT(backend); 
 #ifdef IMGUI_ENABLE_FREETYPE
     bool changed_size = false;
@@ -2500,8 +2500,9 @@ void FONT_GetGlyphHMetrics(FontBackEnd *backend, int glyph_index, float scale, i
     *advanceWidth = (float)FT_CEIL(slot->advance.x);
     *leftSideBearing = backend->Face->glyph->bitmap_left;
 #else
-    stbtt_GetGlyphHMetrics(backend->stbtt_backend, glyph_index, advanceWidth, leftSideBearing);
-    *advanceWidth*= scale;
+    int advance;
+    stbtt_GetGlyphHMetrics(backend->stbtt_backend, glyph_index, &advance, leftSideBearing);
+    *advanceWidth = advance * scale;
 #endif
 }
 
@@ -2928,7 +2929,8 @@ const ImFontGlyph* ImFont::FindGlyph(ImWchar codepoint, float float_size)
         return this->FallbackGlyph;
     }
 
-    int i, g, advance, lsb, x0, y0, x1, y1;
+    int i, g, lsb, x0, y0, x1, y1;
+    float advance;
     int gw, gh;
     short short_size = (short) float_size;
     short lut_relative_size = ImClamp(short_size - IM_HASH_MIN_FONT_SIZE, 0, IM_HASH_NUM_SIZES - 1);
