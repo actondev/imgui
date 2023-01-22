@@ -67,11 +67,11 @@ imgui = library('imgui',
     sources,
     dependencies: [
       # the dependency here just addes the necessary include_directories
-      dependency('sdl', required: get_option('sdl')),
-      dependency('glfw', required: get_option('glfw')),
+      # dependency('sdl', required: get_option('sdl')),
+      dependency('glfw3', required: get_option('glfw')),
       # sfml
-      dependency('sfml-window', required: get_option('sfml')),
-      dependency('sfml-system', required: get_option('sfml')),
+      # dependency('sfml-window', required: get_option('sfml')),
+      # dependency('sfml-system', required: get_option('sfml')),
       deps,
     ],
     include_directories: [
