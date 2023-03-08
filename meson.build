@@ -31,9 +31,10 @@ if get_option('sfml')
   deps += sfml_imgui_dep
 endif
 
-# that's the default value
-# but allegro needs int
-ImDrawIdx = 'unsigned short'
+# default value: unsigned short
+# allegro needs int
+# but also, if adding maaany things to imdraw lists, int is better :)
+ImDrawIdx = 'unsigned int'
 
 if get_option('allegro')
   message('adding allegro support')
